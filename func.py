@@ -34,3 +34,13 @@ def GaussianDistribution(x,mu,sigma_square):
         * np.exp(-0.5 * np.sum(np.dot(x, np.linalg.pinv(sigma_square)) *x ,axis=1))
     
     return p
+
+def visualize(x,mu,sigma_square):
+    x1,x2 = np.meshgrid(np.arange(0,35.5,0.5),np.arange(0,35.5,0.5))
+    z = GaussianDistribution(np.stack([x1.ravel(),x2.ravel()],axis=1),mu,sigma_square)
+    z = z.reshape(x1.shape)
+    
+    plt.plot(x[:,0],x[:,1],'bx',mec='b',mew=2,ms=8)
+    
+    if np.all(abs(z) != np.inf):
+        plt.contour(x1,x2,z,levels=10**(np.arange(-20.,1,3)),zoder=100)
