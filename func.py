@@ -1,5 +1,6 @@
 import numpy as np
 from numpy import genfromtxt
+import matplotlib.pyplot as plt
 
 #genfromtxt is able to take missing data into account
 #delimiter uses comma as seperator for parsing the file
@@ -44,3 +45,26 @@ def visualize(x,mu,sigma_square):
     
     if np.all(abs(z) != np.inf):
         plt.contour(x1,x2,z,levels=10**(np.arange(-20.,1,3)),zoder=100)
+
+def Evaluation(y_val, p_val):
+    bestEpsilon = 0
+    bestF1 = 0
+    F1 = 0
+    
+    for epsilon in np.linspace(1.01*min(p_val), max(p_val), 1000):
+        
+        prediction = (p_val < epsilon)
+        tp = np.sum((prediction == y_val) & (y_val == 1))
+        fp = np.sum((prediction == 1) & (y_val == 0))
+        fn = np.sum((prediction == 0) & (y_val == 1))
+        
+        prec = tp / (tp + fp)
+        rec = tp / (tp + fn)
+        
+        F1 = 2 * prec * rec /(prec + rec)
+        
+        if F1 > bestF1:
+            bestF1 =F1
+            bestEpsilon = epsilon
+            
+    return bestEpsilon, bestF1
