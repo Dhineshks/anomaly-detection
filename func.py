@@ -19,3 +19,18 @@ def estimateGaussian(x):
     sigma_square = (1/m) * np.sum((x - mu) ** 2, axis=0) 
     
     return mu , sigma_square
+
+def GaussianDistribution(x,mu,sigma_square):
+    l = mu.size
+    
+    #converting sigma_square into diagonal matrix for determinant calculation
+    if sigma_square.ndim == 1:
+        sigma_square = np.diag(sigma_square)
+        
+    x = x - mu 
+    
+    #gaussian distribution formula
+    p = (2 * np.pi) ** (-l / 2) * np.linalg.det(sigma_square) ** (-0.5)\
+        * np.exp(-0.5 * np.sum(np.dot(x, np.linalg.pinv(sigma_square)) *x ,axis=1))
+    
+    return p
